@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 //куски секций и компонентов
 import SectionTitle from './SectionTitle/SectionTitle';
@@ -9,49 +9,49 @@ import Statistics from './Statistics/Statistics';
 //стилистика общего контейнера
 import { Container } from './App.styled';
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+function App() {
+  //первое значение в скобках [] это изначальный стейт, а второе - функция для его изменения.
+  //useState(0) - В качестве параметра хук принимает начальное состояниия, в данном случае это число 0.
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  //функция по увеличению значения накопительного стейта на 1 при нажатии на кнопку good или neutral или bad.
+  const handleIncrement = name => {
+    switch (name) {
+      case 'good':
+        setGood(state => state + 1);
+        return;
+      case 'neutral':
+        setNeutral(state => state + 1);
+        return;
+      case 'bad':
+        setBad(state => state + 1);
+        return;
+      default:
+        return;
+    }
+  };   
+  //функция по суммированию значений, которые появились на 20 строке в параметре нейм.
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
+  //функция по подсчету позитивных оценок  
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
+    const result = (good / total) * 100;
+    return Math.round(result);
+  };
+  //переменная с условием для выведения соответствующей нотификашки.
+  const variation = good > 0 || neutral > 0 || bad > 0;
 
-  //функция по увеличению значения новой копии массива state на 1 при нажатии на кнопку good или neutral или bad.
-  //Event - это накопительный массив, имеющий первоначальное значение state и сумму всех нажатий.
-  //state - это изначальный массив с нулевыми значениями (строки 7-11)
-  //[event] - это новый массив на базе стейта с нулевыми значениями к которому мы приплюсовываем при нажатии на кнопки, 
-  //который после ретерна передает новое значение в ивент на 18 строке. 
-  handleIncrement = event => {
-    this.setState(state => {
-      return { [event]: state[event] + 1 };      
-    }    
-    );
-  }
-  
-  //функция по суммированию значений, которые появились на 18 строке в ивенте.
-  countTotalFeedback = () => {
-  const { good, neutral, bad } = this.state;
-  return good + neutral + bad
-  }
-  //функция по подсчету позитивных оценок
-  countPositiveFeedbackPercentage = () => {
-    const total = this.countTotalFeedback();
-    const good = this.state.good;
-    const positivePercentage = (good / total) * 100;
-    return Math.round(positivePercentage)
-  }
-
-
-  render() {
-    const { good, neutral, bad } = this.state;
-    const variation = good > 0 || neutral > 0 || bad > 0;
     return (
       <Fragment>
         <Container>
         <SectionTitle title="Please leave Feedback">
         <Feedback 
-            options={this.state}
-            handleIncrement ={this.handleIncrement}
+            options={{ good, neutral, bad }}
+            handleIncrement ={handleIncrement}
           />
         </SectionTitle>
         <SectionTitle title="Statictics">
@@ -61,15 +61,15 @@ class App extends Component {
               good={good}
               neutral={neutral}
               bad={bad}
-            //вызов в тотале, потому как в фидбэк жсх в баттоне кинул функцию
-            total={this.countTotalFeedback()}
-            positiveTotal={this.countPositiveFeedbackPercentage()}              
+            //вызов в тотале, потому как в компоненте фидбэк в баттоне кинул функцию
+            total={countTotalFeedback()}
+            positiveTotal={countPositiveFeedbackPercentage()}              
         />}              
           </SectionTitle>
           </Container>
     </Fragment>)
   }
-}
+
 export default App;
 
 
