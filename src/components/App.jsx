@@ -7,16 +7,18 @@ import Notification from './Notification/Notification';
 import Statistics from './Statistics/Statistics';
 
 //стилистика общего контейнера
-import { Container } from './App.styled';
+import { Container } from './App.styled'; 
 
 function App() {
-  //первое значение в скобках [] это изначальный стейт, а второе - функция для его изменения.
-  //useState(0) - В качестве параметра хук принимает начальное состояниия, в данном случае это число 0.
+  //первый элемент в массиве [] это изначальный стейт(само состояние), а второе - функция, которая позволяет изменять это состояния.
+  //useState(0) - В качестве параметра хук принимает начальное состояние, в данном случае это число 0.
+  //useState - функция хук возвращает картеж (массив с заранее определенными элементами (вышеуказанные))
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
   //функция по увеличению значения накопительного стейта на 1 при нажатии на кнопку good или neutral или bad.
+  //state - это предыдущее состояние
   const handleIncrement = name => {
     switch (name) {
       case 'good':
